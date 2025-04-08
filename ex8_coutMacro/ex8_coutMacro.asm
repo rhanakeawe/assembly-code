@@ -20,27 +20,27 @@
 ; print(ascii, 5);
 
 %macro	print 	2
-        mov     rax, 1					;SYS_write
-        mov     rdi, 1					;where to write
-        mov     rsi, %1					;address of strint
-        mov     rdx, %2					;number of character
-        syscall						;calling system services
+  mov     rax, 1					;SYS_write
+  mov     rdi, 1					;where to write
+  mov     rsi, %1					;address of strint
+  mov     rdx, %2					;number of character
+  syscall						;calling system services
 %endmacro
 
 section .bss
-sumN		resw    1
-ascii		resb    10
+  sumN		resw    1
+  ascii		resb    10
 
 section .data
-LF		equ	10
-NULL		equ	0
-SYS_exit	equ	60
-EXIT_SUCCESS	equ	0
-N		equ	99
-str1		db      "1 + 2 + 3 +...+ N = ", NULL
+  LF		equ	10
+  NULL		equ	0
+  SYS_exit	equ	60
+  EXIT_SUCCESS	equ	0
+  N		equ	99
+  str1		db      "1 + 2 + 3 +...+ N = ", NULL
 
 section .text
-        global _start
+  global _start
 _start:
 	; calculates 1+2+3+...+N
 	mov	cx, 0					;cx = 0
