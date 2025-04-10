@@ -1,14 +1,14 @@
 ;#begin define print(string, numOfChar)
 ;	rax = 1;
 ;	rdi = 1;
-;	rsi = &string;
+;	si = &string;
 ;	rdx = numOfChar;
 ;	syscall;
 ;#end
 ;#begin define scan(buffer, numOfChar)
 ;	rax = 0;
 ;	rdi = 0;
-;	rsi = &buffer;
+;	si = &buffer;
 ;	rdx = numOfChar;
 ;	syscall;
 ;#end
@@ -24,10 +24,10 @@
 ;	print(msg1, 26);
 ;	scan(buffer, 4);
 ;	n = atoi(buffer);
-;	rsi = 0;
+;	si = 0;
 ;	do {
-;	    sumN += rsi;
-;	} while(rsi >= 0);
+;	    sumN += si;
+;	} while(si >= 0);
 ;	ascii = itoa(sumN);
 ;	print(msg2, 16);
 ;	print(buffer, 3);
@@ -39,7 +39,7 @@
 %macro print 2
   mov   rax, 1
   mov   rdi, 1
-  mov   rsi, %1
+  mov   si, %1
   mov   rdx, %2
   syscall
 %endmacro
@@ -47,7 +47,7 @@
 %macro scan 2
   mov   rax, 0
   mov   rdi, 0
-  mov   rsi, %1
+  mov   si, %1
   mov   rdx, %2
 %endmacro
 
@@ -71,7 +71,46 @@ section .text
 
 _start:
   ;print(msg1,26)
-  print msg1, 26
+  print   msg1, 26
+  ;scan(buffer,4)
+  scan    buffer, 4
+  ;n = atoi(buffer)
+  mov     al, byte[buffer]
+  add     al, "0"
+  mov     byte[n], al
+  ;si = 0
+  mov     si, 0
+sumLoop:
+  add     word[sumN], si
+  inc     si
+  cmp     si, n
+  jbe     sumLoop
+
+  mov     ax, word[sumN]
+  mov     rcx, 0
+  mov     bx, 10
+divideLoop:
+  mov     dx, 0
+  div     bx
+  push    rdx
+  inc     rcx
+  cmp     ax, 0
+  jne     divideLoop
+
+  mov     rbx, ascii
+  mov     rdi, 0
+popLoop:
+  pop     rax
+  add     al, "0"
+  mov     byte[rbx+rdi],al
+  inc     rdi
+  loop    popLoop
+  mov     byte[rbx,rdi], LF
+
+  print   msg2, 16
+  print   buffer, 3
+  print   msg3, 3
+  print   ascii, 7
 
 done:
   mov   rax, SYS_exit
