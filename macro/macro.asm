@@ -39,7 +39,7 @@
 %macro print 2
   mov   rax, 1
   mov   rdi, 1
-  mov   si, %1
+  mov   rsi, %1
   mov   rdx, %2
   syscall
 %endmacro
@@ -47,8 +47,9 @@
 %macro scan 2
   mov   rax, 0
   mov   rdi, 0
-  mov   si, %1
+  mov   rsi, %1
   mov   rdx, %2
+  syscall
 %endmacro
 
 section .bss
@@ -80,15 +81,16 @@ _start:
   mov     byte[n], al
   ;si = 0
   mov     si, 0
+
 sumLoop:
   add     word[sumN], si
   inc     si
-  cmp     si, n
+  cmp     si, word[n]
   jbe     sumLoop
-
   mov     ax, word[sumN]
   mov     rcx, 0
   mov     bx, 10
+
 divideLoop:
   mov     dx, 0
   div     bx
@@ -96,22 +98,26 @@ divideLoop:
   inc     rcx
   cmp     ax, 0
   jne     divideLoop
-
   mov     rbx, ascii
   mov     rdi, 0
+
 popLoop:
+  ; ascii = itoi(sumN)
   pop     rax
   add     al, "0"
-  mov     byte[rbx+rdi],al
+  mov     byte[rbx+rdi], al
   inc     rdi
   loop    popLoop
-  mov     byte[rbx,rdi], LF
+  mov     byte[rbx+rdi], LF
 
+  ; print(msg2, 16)
   print   msg2, 16
+  ; print(buffer, 3)
   print   buffer, 3
+  ; print(msg3, 3)
   print   msg3, 3
+  ; print(ascii, 7)
   print   ascii, 7
-
 done:
   mov   rax, SYS_exit
   mov   rdi, EXIT_SUCCESS

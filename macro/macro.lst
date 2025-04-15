@@ -1,0 +1,146 @@
+     1                                 %line 1+1 ./macro/macro.asm
+     2                                 
+     3                                 
+     4                                 
+     5                                 
+     6                                 
+     7                                 
+     8                                 
+     9                                 
+    10                                 
+    11                                 
+    12                                 
+    13                                 
+    14                                 
+    15                                 
+    16                                 
+    17                                 
+    18                                 
+    19                                 
+    20                                 
+    21                                 
+    22                                 
+    23                                 
+    24                                 
+    25                                 
+    26                                 
+    27                                 
+    28                                 
+    29                                 
+    30                                 
+    31                                 
+    32                                 
+    33                                 
+    34                                 
+    35                                 
+    36                                 
+    37                                 
+    38                                 
+    39                                 
+    40                                 %line 46+1 ./macro/macro.asm
+    41                                 
+    42                                 %line 53+1 ./macro/macro.asm
+    43                                 
+    44                                 [section .bss]
+    45 00000000 <gap>                   buffer resb 4
+    46 00000004 <gap>                   n resw 1
+    47 00000006 <gap>                   sumN resw 1
+    48 00000008 <gap>                   ascii resb 10
+    49                                 
+    50                                 [section .data]
+    51                                  LF equ 10
+    52                                  NULL equ 0
+    53                                  SYS_exit equ 60
+    54                                  EXIT_SUCCESS equ 0
+    55 00000000 496E7075742061206E-     msg1 db "Input a number (004~999): ", NULL
+    56 00000000 756D62657220283030-
+    57 00000000 347E393939293A2000 
+    58 0000001B 31202B2032202B2033-     msg2 db "1 + 2 + 3 +...+ "
+    59 0000001B 202B2E2E2E2B20     
+    60 0000002B 203D20                  msg3 db " = "
+    61                                 
+    62                                 [section .text]
+    63                                 [global _start]
+    64                                 
+    65                                 _start:
+    66                                 
+    67 00000000 48C7C001000000          mov rax, 1
+    68                                 %line 74+0 ./macro/macro.asm
+    69 00000007 48C7C701000000          mov rdi, 1
+    70 0000000E 48C7C6[00000000]        mov rsi, msg1
+    71 00000015 48C7C21A000000          mov rdx, 26
+    72 0000001C 0F05                    syscall
+    73                                 %line 75+1 ./macro/macro.asm
+    74                                 
+    75 0000001E 48C7C000000000          mov rax, 0
+    76                                 %line 76+0 ./macro/macro.asm
+    77 00000025 48C7C700000000          mov rdi, 0
+    78 0000002C 48C7C6[00000000]        mov rsi, buffer
+    79 00000033 48C7C204000000          mov rdx, 4
+    80                                 %line 77+1 ./macro/macro.asm
+    81                                 
+    82 0000003A 8A0425[00000000]        mov al, byte[buffer]
+    83 00000041 0430                    add al, "0"
+    84 00000043 880425[00000000]        mov byte[n], al
+    85                                 
+    86 0000004A 66BE0000                mov si, 0
+    87                                 sumLoop:
+    88 0000004E 66013425[00000000]      add word[sumN], si
+    89 00000056 66FFC6                  inc si
+    90 00000059 6681FE[0000]            cmp si, n
+    91 0000005E 76EC                    jbe sumLoop
+    92                                 
+    93 00000060 668B0425[00000000]      mov ax, word[sumN]
+    94 00000068 48C7C100000000          mov rcx, 0
+    95 0000006F 66BB0A00                mov bx, 10
+    96                                 divideLoop:
+    97 00000073 66BA0000                mov dx, 0
+    98 00000077 66F7F3                  div bx
+    99 0000007A 52                      push rdx
+   100 0000007B 48FFC1                  inc rcx
+   101 0000007E 6683F800                cmp ax, 0
+   102 00000082 75ED                    jne divideLoop
+   103                                 
+   104 00000084 48C7C3[00000000]        mov rbx, ascii
+   105 0000008B 48C7C700000000          mov rdi, 0
+   106                                 popLoop:
+   107 00000092 58                      pop rax
+   108 00000093 0430                    add al, "0"
+   109 00000095 88043B                  mov byte[rbx+rdi], al
+   110 00000098 48FFC7                  inc rdi
+   111 0000009B E2F3                    loop popLoop
+   112 0000009D C6043B0A                mov byte[rbx+rdi], LF
+   113                                 
+   114 000000A1 48C7C001000000          mov rax, 1
+   115                                 %line 110+0 ./macro/macro.asm
+   116 000000A8 48C7C701000000          mov rdi, 1
+   117 000000AF 48C7C6[00000000]        mov rsi, msg2
+   118 000000B6 48C7C210000000          mov rdx, 16
+   119 000000BD 0F05                    syscall
+   120                                 %line 111+1 ./macro/macro.asm
+   121 000000BF 48C7C001000000          mov rax, 1
+   122                                 %line 111+0 ./macro/macro.asm
+   123 000000C6 48C7C701000000          mov rdi, 1
+   124 000000CD 48C7C6[00000000]        mov rsi, buffer
+   125 000000D4 48C7C203000000          mov rdx, 3
+   126 000000DB 0F05                    syscall
+   127                                 %line 112+1 ./macro/macro.asm
+   128 000000DD 48C7C001000000          mov rax, 1
+   129                                 %line 112+0 ./macro/macro.asm
+   130 000000E4 48C7C701000000          mov rdi, 1
+   131 000000EB 48C7C6[00000000]        mov rsi, msg3
+   132 000000F2 48C7C203000000          mov rdx, 3
+   133 000000F9 0F05                    syscall
+   134                                 %line 113+1 ./macro/macro.asm
+   135 000000FB 48C7C001000000          mov rax, 1
+   136                                 %line 113+0 ./macro/macro.asm
+   137 00000102 48C7C701000000          mov rdi, 1
+   138 00000109 48C7C6[00000000]        mov rsi, ascii
+   139 00000110 48C7C207000000          mov rdx, 7
+   140 00000117 0F05                    syscall
+   141                                 %line 114+1 ./macro/macro.asm
+   142                                 
+   143                                 done:
+   144 00000119 48C7C03C000000          mov rax, SYS_exit
+   145 00000120 48C7C700000000          mov rdi, EXIT_SUCCESS
+   146 00000127 0F05                    syscall
