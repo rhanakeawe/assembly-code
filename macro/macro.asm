@@ -75,10 +75,26 @@ _start:
   print   msg1, 26
   ;scan(buffer,4)
   scan    buffer, 4
+  mov     ax, 0
+  mov     bx, 10
+  mov     rsi, 0
   ;n = atoi(buffer)
-  mov     al, byte[buffer]
-  add     al, "0"
-  mov     byte[n], al
+inputLoop:
+  mov     bl, 0
+  mov     bl, byte[buffer+rsi]
+  and     bl, 0fh
+  add     al, bl
+  adc     ah, 0
+  cmp     rsi, 2
+  je      skipMul
+  mov     bx, 10
+  mul     bx
+
+skipMul:
+  inc     rsi
+  cmp     rsi, 3
+  jl      inputLoop
+  mov     word[n], ax
   ;si = 0
   mov     si, 0
 
@@ -118,6 +134,7 @@ popLoop:
   print   msg3, 3
   ; print(ascii, 7)
   print   ascii, 7
+
 done:
   mov   rax, SYS_exit
   mov   rdi, EXIT_SUCCESS
