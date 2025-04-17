@@ -54,8 +54,8 @@
 
 section .bss
   buffer  resb  4
-  n       resw  1
-  sumN    resw  1
+  n       resd  1
+  sumN    resd  1
   ascii   resb  10
 
 section .data
@@ -75,7 +75,7 @@ _start:
   print   msg1, 26
   ;scan(buffer,4)
   scan    buffer, 4
-  mov     ax, 0
+  mov     eax, 0
   mov     bx, 10
   mov     rsi, 0
   ;n = atoi(buffer)
@@ -94,25 +94,25 @@ skipMul:
   inc     rsi
   cmp     rsi, 3
   jl      inputLoop
-  mov     word[n], ax
+  mov     dword[n], eax
   ;si = 0
-  mov     si, 0
+  mov     ecx, 0
 
 sumLoop:
-  add     word[sumN], si
-  inc     si
-  cmp     si, word[n]
+  add     dword[sumN], ecx
+  inc     ecx
+  cmp     ecx, dword[n]
   jbe     sumLoop
-  mov     ax, word[sumN]
+  mov     eax, dword[sumN]
   mov     rcx, 0
-  mov     bx, 10
+  mov     ebx, 10
 
 divideLoop:
   mov     dx, 0
-  div     bx
+  div     ebx
   push    rdx
   inc     rcx
-  cmp     ax, 0
+  cmp     eax, 0
   jne     divideLoop
   mov     rbx, ascii
   mov     rdi, 0
