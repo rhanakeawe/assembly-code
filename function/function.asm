@@ -82,9 +82,6 @@ _start:
   print   msg1, 26
   scan    buffer, 4
   
-  print   msg2, 16
-  print   buffer, 3
-
   mov     rbx, buffer
   call    toInteger
 
@@ -96,8 +93,8 @@ _start:
   mov     edi, dword[sumN]
   call    toString
 
-  ;print   msg2, 16
-  ;print   buffer, 3
+  print   msg2, 16
+  print   buffer, 3
   print   msg3, 3
   print   ascii, 6
 
@@ -106,16 +103,19 @@ _start:
   syscall
 
 toInteger:
-  mov     rax, 0
-  mov     rdi, 10
+  mov     eax, 0
+  mov     bx, 10
   mov     rsi, 0
 next0:
-  and     byte[rbx+rsi], 0fh
-  add     al, byte[rbx+rsi]
+  mov     bl, 0
+  mov     bl, byte[buffer+rsi]
+  and     bl, 0fh
+  add     al, bl
   adc     ah, 0
   cmp     rsi, 2
   je      skip0
-  mul     edi
+  mov     bx, 10
+  mul     bx
 skip0:
   inc     rsi
   cmp     rsi, 3
