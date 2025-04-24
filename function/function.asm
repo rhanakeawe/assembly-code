@@ -96,7 +96,7 @@ _start:
   print   msg2, 16
   print   buffer, 3
   print   msg3, 3
-  print   ascii, 6
+  print   ascii, 7
 
   mov     rax, SYS_exit
   mov     rdi, EXIT_SUCCESS
